@@ -1,109 +1,109 @@
 #include "Rasterizer.h"
-#include "SDL.h"
+#include "ZSWindow.h"
+#include "SceneTexture.h"
 #include "stdio.h"
-#include <direct.h>
+#include <memory>
+#include "Scene.h"
+#include <SDL.h>
+#include "ZSRenderer.h"
+#include "Shaders.h"
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
 
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 400
 
-//The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+using namespace std;
 
-//The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
+shared_ptr<ZSWindow> window;
 
-//The image we will load and show on the screen
-SDL_Surface* gHelloWorld = NULL;
+void CreateScene(shared_ptr<Scene> scene) {
+	scene->meshes = vector<MeshObject>();
+	scene->camera = make_shared<PerspectiveCamera>();
+	scene->camera->SetProjectionMatrix(90, SCREEN_WIDTH, SCREEN_HEIGHT, 1.0, 25.0);
+	scene->camera->transform.SetLocalPosition(0, 0, -6);
+	scene->camera->transform.SetScale(1, 1, 1);
+	scene->camera->transform.SetRotation(0, 0, 0);
+	scene->camera->transform.ApplyTransformations();
+	MeshObject mesh = MeshObject("Assets/Testing/cubemesh.obj");
+	mesh.transform.SetLocalPosition(0, 0, 0);
+	mesh.transform.SetScale(1, 1, 1);
+	mesh.transform.SetRotation(0, 5, 0);
+	mesh.transform.ApplyTransformations();
+	mesh.transform.parent = NULL;
+	scene->meshes.push_back(mesh);
 
-bool init()
-{
-	//Initialization flag
-	bool success = true;
-
-	//Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		success = false;
-	}
-	else
-	{
-		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (gWindow == NULL)
-		{
-			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-			success = false;
-		}
-		else
-		{
-			//Get window surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
-		}
-	}
-
-	return success;
-}
-
-void close()
-{
-	//Deallocate surface
-	SDL_FreeSurface(gHelloWorld);
-	gHelloWorld = NULL;
-
-	//Destroy window
-	SDL_DestroyWindow(gWindow);
-	gWindow = NULL;
-
-	//Quit SDL subsystems
-	SDL_Quit();
-}
-
-bool loadMedia()
-{
-	//Loading success flag
-	bool success = true;
-
-	//Load splash image
-	const char img[] = "Assets/Testing/testimage.bmp";
-	gHelloWorld = SDL_LoadBMP(img);
-	if (gHelloWorld == NULL)
-	{
-		printf("Unable to load image %s! SDL Error: %s\n", img, SDL_GetError());
-		success = false;
-	}
-
-	return success;
+	MeshObject quad = MeshObject("Assets/Testing/quadmesh.obj");
+	quad.transform.SetLocalPosition(0, 0, 0);
+	quad.transform.SetScale(1.4, 1.4, 1.4);
+	quad.transform.SetRotation(0, 180, 0);
+	quad.transform.ApplyTransformations();
+	quad.transform.parent = NULL;
+	scene->meshes.push_back(quad);
 }
 
 int main(int argc, char* argv[])
 {
+	//Initialize random seed
+	srand(time(NULL));
+
 	// Body of the program goes here.
 	//Start up SDL and create window
-	if (!init())
+	window = make_shared<ZSWindow>("Zach's 3D Rasterizer", SCREEN_WIDTH, SCREEN_HEIGHT);
+	bool initialized = window->init();
+	if (!initialized)
 	{
 		printf("Failed to initialize!\n");
 	}
-	else
-	{
-		//Load media
-		if (!loadMedia())
-		{
-			printf("Failed to load media!\n");
+
+	shared_ptr<Scene> scene = make_shared<Scene>();
+	CreateScene(scene);
+
+	shared_ptr<SceneTexture> scene_tex = make_shared<SceneTexture>(window->renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	shared_ptr<ZSRenderer> zs_renderer = make_shared<ZSRenderer>(scene_tex);
+	
+	float rotationX = 0;
+	float rotationY = 5;
+	float Y = 0;
+	//SDL_Delay(30000);
+	int frame_count = 0;
+	time_t seconds;
+
+	int high = 0;
+	int low = 10000;
+	seconds = time(NULL);
+	while (true) {
+		zs_renderer->RenderScene(scene);
+		scene->meshes[0].transform.SetRotation(rotationX, rotationY, rotationX);
+		scene->meshes[0].transform.ApplyTransformations();
+		scene->meshes[1].transform.SetRotation(0, rotationY, 0);
+		scene->meshes[1].transform.ApplyTransformations();
+		rotationX += 1;
+		rotationY += 1;
+
+		window->ClearWindow();
+		window->RenderSceneTexture(scene_tex);
+		window->Present();
+		scene_tex->Clear();
+		//printf("done rendering frame %i...\n", frame_count);
+		frame_count++;
+		if (time(NULL) - seconds >= 1) {
+			if (frame_count > high) {
+				high = frame_count;
+			}
+			if (frame_count < low) {
+				low = frame_count;
+			}
+			std::cout << "Frame count this second:" << frame_count << "   HIGH=" << high << "   LOW=" << low <<"\n";
+			frame_count = 0;
+			seconds = time(NULL);
 		}
-		else
-		{
-			//Apply the image
-			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
-			//Update the surface
-			SDL_UpdateWindowSurface(gWindow);
-			//Wait two seconds
-			SDL_Delay(10000);
-		}
+		//SDL_Delay(100);
 	}
 
 	//Free resources and close SDL
-	close();
+	window->close();
 
 	return 0;
 }

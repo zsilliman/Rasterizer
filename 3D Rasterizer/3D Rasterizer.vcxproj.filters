@@ -13,15 +13,144 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Transformations">
+      <UniqueIdentifier>{f3d20aec-2b02-4aa1-bbea-041422a0cc4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Transformations">
+      <UniqueIdentifier>{160e1f64-e7d6-4f6e-8df0-f56795a3a690}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{e49ab9f8-c7c8-4415-9549-4642aedf8b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{d636b379-0407-474c-a532-516a6834328e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Camera">
+      <UniqueIdentifier>{def3f1f0-ebda-4562-9a15-79305b129aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Camera">
+      <UniqueIdentifier>{4d07fc57-220e-4d93-83ef-873bb4bcf72a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{64072aeb-a9d3-49e7-bdf6-ef168e656e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{264160f0-4a81-42e6-b818-fc38d6afefc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\tinyobjloader">
+      <UniqueIdentifier>{3732a56f-9d8a-4235-ade2-f3e4ad51185a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TempLoading">
+      <UniqueIdentifier>{cfda3e5a-ecd5-48d9-86db-a8df5cb7120b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TempLoading">
+      <UniqueIdentifier>{055f0573-6a41-4103-ba6b-a14fcc20bc6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Mesh">
+      <UniqueIdentifier>{b76fa827-269e-432a-8860-6b74aaa4ab9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Light">
+      <UniqueIdentifier>{a0d863f9-cfcf-4988-9292-082febddc2e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Mesh">
+      <UniqueIdentifier>{e36a3cc8-d0cd-4035-9a13-1710fc1e4065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Light">
+      <UniqueIdentifier>{e4f403b5-8e00-4408-b9e3-926914be2841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{cd49aad5-3e45-4239-a090-3cd19a58bf8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{44366c98-7cb2-49db-889a-d459cccc6338}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rasterizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ZSTransform.cpp">
+      <Filter>Source Files\Transformations</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="PerspectiveCamera.cpp">
+      <Filter>Source Files\World\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCamera.cpp">
+      <Filter>Source Files\World\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\World\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ZSWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneTexture.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\TempLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObject.cpp">
+      <Filter>Source Files\World\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ZSMath.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ZSRenderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rasterizer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZSTransform.h">
+      <Filter>Header Files\Transformations</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="PerspectiveCamera.h">
+      <Filter>Header Files\World\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCamera.h">
+      <Filter>Header Files\World\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\World\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ZSWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneTexture.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyobjloader.h">
+      <Filter>Header Files\tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\TempLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObject.h">
+      <Filter>Header Files\World\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ZSMath.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ZSRenderer.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
