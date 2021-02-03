@@ -1,6 +1,7 @@
 #pragma once
 #include "SceneObject.h"
 #include "Mesh.h"
+#include "Material.h"
 #include "Shaders.h"
 #include <string>
 
@@ -12,18 +13,8 @@ class MeshObject : public SceneObject
 public:
 
 	shared_ptr<Mesh> mesh = nullptr;
+	vector<Material> materials;
 
-	MeshObject(string inputfile);
-
-	VertexShader vert;
-	FragmentShader frag;
-
-	inline void SetVertexShader(VertexShader shader) {
-		vert = shader;
-	}
-
-	inline void SetFragmentShader(FragmentShader shader) {
-		frag = shader;
-	}
+	MeshObject(shared_ptr<Mesh> mesh);
 
 };

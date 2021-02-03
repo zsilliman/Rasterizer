@@ -19,6 +19,7 @@ struct Triangle
 {
 	MeshIndex indices[3];
 	SDL_Color Color;
+	int material_id;
 };
 
 struct Shape
@@ -33,5 +34,3 @@ struct Mesh
 	vector<Vector4d, Eigen::aligned_allocator<Vector4d>> Normals;
 	vector<Vector2d, Eigen::aligned_allocator<Vector2d>> UVs;
 };
-
-void LoadMesh(string inputfile, shared_ptr<Mesh> mesh);

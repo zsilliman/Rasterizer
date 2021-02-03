@@ -1,10 +1,7 @@
 #include "MeshObject.h"
 
-MeshObject::MeshObject(string inputfile)
+MeshObject::MeshObject(std::shared_ptr<Mesh> mesh)
 {
-	mesh = make_shared<Mesh>();
-	LoadMesh(inputfile, mesh);
+	this->mesh = mesh;
 	transform = ZSTransform();
-	vert = DEFAULT_VERTEX_SHADER;
-	frag = DEFAULT_FRAGMENT_SHADER;
 }

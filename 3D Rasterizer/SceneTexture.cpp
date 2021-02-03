@@ -24,6 +24,35 @@ SceneTexture::SceneTexture(shared_ptr<SDL_Renderer> renderer, int Width, int Hei
 	}
 }
 
+void SceneTexture::ThreadSafeWritePixel(int index, Uint32 col) {
+	std::lock_guard<std::shared_mutex> lock(mtx);
+	pixels[index] = col;
+}
+
+Uint32 SceneTexture::ThreadSafeReadPixel(int index) {
+	std::shared_lock<std::shared_mutex> lock(mtx);
+	Uint32 col = pixels[index];
+	return col;
+}
+
+void SceneTexture::ThreadSafeWriteZBuffer(int index, float depth) {
+	std::lock_guard<std::shared_mutex> lock(mtx);
+	z_buffer[index] = depth;
+}
+
+float SceneTexture::ThreadSafeReadZBuffer(int index) {
+	std::shared_lock<std::shared_mutex> lock(mtx);
+	float z = z_buffer[index];
+	return z;
+}
+
+void SceneTexture::ThreadSafeWritePixelAndDepth(int index, Uint32 col, float depth)
+{
+	std::lock_guard<std::shared_mutex> lock(mtx);
+	pixels[index] = col;
+	z_buffer[index] = depth;
+}
+
 void SceneTexture::Clear() {
 	memset(pixels.get(), 255, width * height * sizeof(Uint32));
 	for (int i = 0; i < width * height; i++) {

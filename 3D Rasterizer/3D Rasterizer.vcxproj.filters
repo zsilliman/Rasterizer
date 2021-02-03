@@ -40,12 +40,6 @@
     <Filter Include="Header Files\tinyobjloader">
       <UniqueIdentifier>{3732a56f-9d8a-4235-ade2-f3e4ad51185a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TempLoading">
-      <UniqueIdentifier>{cfda3e5a-ecd5-48d9-86db-a8df5cb7120b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\TempLoading">
-      <UniqueIdentifier>{055f0573-6a41-4103-ba6b-a14fcc20bc6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\World\Mesh">
       <UniqueIdentifier>{b76fa827-269e-432a-8860-6b74aaa4ab9c}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,18 @@
     </Filter>
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{44366c98-7cb2-49db-889a-d459cccc6338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Materials">
+      <UniqueIdentifier>{48922454-ef26-4f4a-84ea-debc2ed1d8b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Materials">
+      <UniqueIdentifier>{42588705-c51c-4815-b332-97364757aa32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Loading">
+      <UniqueIdentifier>{cfda3e5a-ecd5-48d9-86db-a8df5cb7120b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loading">
+      <UniqueIdentifier>{055f0573-6a41-4103-ba6b-a14fcc20bc6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +100,7 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\TempLoading</Filter>
+      <Filter>Source Files\Loading</Filter>
     </ClCompile>
     <ClCompile Include="MeshObject.cpp">
       <Filter>Source Files\World\Mesh</Filter>
@@ -104,6 +110,24 @@
     </ClCompile>
     <ClCompile Include="ZSRenderer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPipeline.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureUVMaterial.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Source Files\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>Source Files\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>Source Files\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +162,7 @@
       <Filter>Header Files\tinyobjloader</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files\TempLoading</Filter>
+      <Filter>Header Files\Loading</Filter>
     </ClInclude>
     <ClInclude Include="MeshObject.h">
       <Filter>Header Files\World\Mesh</Filter>
@@ -151,6 +175,30 @@
     </ClInclude>
     <ClInclude Include="ZSRenderer.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPipeline.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureUVMaterial.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Header Files\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetLoader.h">
+      <Filter>Header Files\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>Header Files\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Header Files\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,5 +216,13 @@
     <None Include="SDL2.dll">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="SDL2_image.dll">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="3D Rasterizer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

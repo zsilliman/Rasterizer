@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include "ZSRenderer.h"
 #include "Shaders.h"
+#include "AssetManager.h"
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
@@ -17,8 +18,15 @@
 using namespace std;
 
 shared_ptr<ZSWindow> window;
+shared_ptr<AssetManager> asset_manager;
 
 void CreateScene(shared_ptr<Scene> scene) {
+	Material default_material = Material();
+	
+	//Load Assets
+	std::shared_ptr<Mesh> cube_mesh = asset_manager->LoadObj("Assets/Testing/cubemesh.obj");
+	std::shared_ptr<Mesh> quad_mesh = asset_manager->LoadObj("Assets/Testing/quadmesh.obj");
+
 	scene->meshes = vector<MeshObject>();
 	scene->camera = make_shared<PerspectiveCamera>();
 	scene->camera->SetProjectionMatrix(90, SCREEN_WIDTH, SCREEN_HEIGHT, 1.0, 25.0);
@@ -26,20 +34,23 @@ void CreateScene(shared_ptr<Scene> scene) {
 	scene->camera->transform.SetScale(1, 1, 1);
 	scene->camera->transform.SetRotation(0, 0, 0);
 	scene->camera->transform.ApplyTransformations();
-	MeshObject mesh = MeshObject("Assets/Testing/cubemesh.obj");
+
+	MeshObject mesh = MeshObject(cube_mesh);
 	mesh.transform.SetLocalPosition(0, 0, 0);
 	mesh.transform.SetScale(1, 1, 1);
 	mesh.transform.SetRotation(0, 5, 0);
 	mesh.transform.ApplyTransformations();
 	mesh.transform.parent = NULL;
+	mesh.materials.push_back(default_material);
 	scene->meshes.push_back(mesh);
 
-	MeshObject quad = MeshObject("Assets/Testing/quadmesh.obj");
+	MeshObject quad = MeshObject(quad_mesh);
 	quad.transform.SetLocalPosition(0, 0, 0);
 	quad.transform.SetScale(1.4, 1.4, 1.4);
 	quad.transform.SetRotation(0, 180, 0);
 	quad.transform.ApplyTransformations();
 	quad.transform.parent = NULL;
+	quad.materials.push_back(default_material);
 	scene->meshes.push_back(quad);
 }
 
@@ -47,6 +58,9 @@ int main(int argc, char* argv[])
 {
 	//Initialize random seed
 	srand(time(NULL));
+
+	//Setup Asset Manager
+	asset_manager = make_shared<AssetManager>();
 
 	// Body of the program goes here.
 	//Start up SDL and create window
@@ -74,7 +88,7 @@ int main(int argc, char* argv[])
 	int low = 10000;
 	seconds = time(NULL);
 	while (true) {
-		zs_renderer->RenderScene(scene);
+		zs_renderer->RenderSceneMultithreaded(scene);
 		scene->meshes[0].transform.SetRotation(rotationX, rotationY, rotationX);
 		scene->meshes[0].transform.ApplyTransformations();
 		scene->meshes[1].transform.SetRotation(0, rotationY, 0);
@@ -103,6 +117,7 @@ int main(int argc, char* argv[])
 	}
 
 	//Free resources and close SDL
+	asset_manager->UnloadAll();
 	window->close();
 
 	return 0;
