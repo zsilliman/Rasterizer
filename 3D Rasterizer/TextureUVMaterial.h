@@ -1,15 +1,17 @@
 #pragma once
 #include "Material.h"
 
-class TextureUVMaterial : Material
+class TextureUVMaterial : public Material
 {
+
+protected:
+
+	std::shared_ptr<SDL_Surface> texture;
 
 public:
 
+	void SetTexture(std::shared_ptr<SDL_Surface> texture);
 
-
-	TextureUVMaterial();
-
-	SDL_Color frag(const InterpolatedValues& pixel_values) override;
+	virtual SDL_Color frag(const InterpolatedValues& pixel_values) override;
 
 };

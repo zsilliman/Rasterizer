@@ -13,7 +13,7 @@ class MeshObject : public SceneObject
 public:
 
 	shared_ptr<Mesh> mesh = nullptr;
-	vector<Material> materials;
+	vector<shared_ptr<Material>> materials;
 
 	MeshObject(shared_ptr<Mesh> mesh);
 

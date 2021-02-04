@@ -8,6 +8,7 @@
 #include "ZSRenderer.h"
 #include "Shaders.h"
 #include "AssetManager.h"
+#include "TextureUVMaterial.h"
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
@@ -21,11 +22,18 @@ shared_ptr<ZSWindow> window;
 shared_ptr<AssetManager> asset_manager;
 
 void CreateScene(shared_ptr<Scene> scene) {
-	Material default_material = Material();
 	
 	//Load Assets
 	std::shared_ptr<Mesh> cube_mesh = asset_manager->LoadObj("Assets/Testing/cubemesh.obj");
 	std::shared_ptr<Mesh> quad_mesh = asset_manager->LoadObj("Assets/Testing/quadmesh.obj");
+	std::shared_ptr<SDL_Surface> checkered = asset_manager->LoadTexture("Assets/Testing/checkerboard.bmp");
+	if (checkered == nullptr)
+		printf("Checkered texture is null...");
+
+	//Create Materials
+	shared_ptr<Material> default_material = make_shared<Material>();
+	shared_ptr<TextureUVMaterial> checkered_diffuse = make_shared<TextureUVMaterial>();
+	checkered_diffuse->SetTexture(checkered);
 
 	scene->meshes = vector<MeshObject>();
 	scene->camera = make_shared<PerspectiveCamera>();
@@ -41,7 +49,7 @@ void CreateScene(shared_ptr<Scene> scene) {
 	mesh.transform.SetRotation(0, 5, 0);
 	mesh.transform.ApplyTransformations();
 	mesh.transform.parent = NULL;
-	mesh.materials.push_back(default_material);
+	mesh.materials.push_back(checkered_diffuse);
 	scene->meshes.push_back(mesh);
 
 	MeshObject quad = MeshObject(quad_mesh);
@@ -50,8 +58,8 @@ void CreateScene(shared_ptr<Scene> scene) {
 	quad.transform.SetRotation(0, 180, 0);
 	quad.transform.ApplyTransformations();
 	quad.transform.parent = NULL;
-	quad.materials.push_back(default_material);
-	scene->meshes.push_back(quad);
+	quad.materials.push_back(checkered_diffuse);
+	//scene->meshes.push_back(quad);
 }
 
 int main(int argc, char* argv[])
@@ -88,13 +96,13 @@ int main(int argc, char* argv[])
 	int low = 10000;
 	seconds = time(NULL);
 	while (true) {
-		zs_renderer->RenderSceneMultithreaded(scene);
+		zs_renderer->RenderScene(scene);
 		scene->meshes[0].transform.SetRotation(rotationX, rotationY, rotationX);
 		scene->meshes[0].transform.ApplyTransformations();
-		scene->meshes[1].transform.SetRotation(0, rotationY, 0);
-		scene->meshes[1].transform.ApplyTransformations();
-		rotationX += 1;
-		rotationY += 1;
+		//scene->meshes[1].transform.SetRotation(0, rotationY, 0);
+		//scene->meshes[1].transform.ApplyTransformations();
+		rotationX += 10;
+		rotationY += 10;
 
 		window->ClearWindow();
 		window->RenderSceneTexture(scene_tex);

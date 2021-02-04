@@ -9,6 +9,7 @@ struct RenderableVertex {
 	Eigen::Vector4d vertexNormal;
 	Eigen::Vector2d UV;
 	Eigen::Vector3d screenPosition;
+	double w;
 	SDL_Color color;
 };
 

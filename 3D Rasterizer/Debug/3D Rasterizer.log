@@ -1,1 +1,5 @@
-﻿  3D Rasterizer.vcxproj -> F:\Shared\Users\Silliman\Workspaces\C++\Rasterizer\Rasterizer\Debug\3D Rasterizer.exe
+﻿  Rasterizer.cpp
+F:\Shared\Users\Silliman\Workspaces\C++\Rasterizer\Rasterizer\3D Rasterizer\Shaders.h(63,55): warning C4244: '=': conversion from 'double' to 'Uint8', possible loss of data
+F:\Shared\Users\Silliman\Workspaces\C++\Rasterizer\Rasterizer\3D Rasterizer\Shaders.h(70,55): warning C4244: '=': conversion from 'double' to 'Uint8', possible loss of data
+F:\Shared\Users\Silliman\Workspaces\C++\Rasterizer\Rasterizer\3D Rasterizer\Rasterizer.cpp(68,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  3D Rasterizer.vcxproj -> F:\Shared\Users\Silliman\Workspaces\C++\Rasterizer\Rasterizer\Debug\3D Rasterizer.exe

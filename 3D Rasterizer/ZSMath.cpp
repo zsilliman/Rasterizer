@@ -24,6 +24,10 @@ int ZSMath::clampInt(int t, int a, int b) {
     return t;
 }
 
+int ZSMath::NonNegativeModulo(int a, int n) {
+    return ((a % n) + n) % n;
+}
+
 Eigen::Vector2d ZSMath::lerp(const Eigen::Vector2d& A, const Eigen::Vector2d& B, double t)
 {
     t = clamp01(t);

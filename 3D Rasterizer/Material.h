@@ -13,4 +13,15 @@ public:
 
 	virtual SDL_Color frag(const InterpolatedValues& pixel_values);
 
+protected:
+
+#pragma region Useful Shader Functions
+
+	Eigen::Vector4d SampleTexture(std::shared_ptr<SDL_Surface> texture, Eigen::Vector2d uv);
+
+	SDL_Color SampleTextureSDLColor(std::shared_ptr<SDL_Surface> texture, Eigen::Vector2d uv);
+
+#pragma endregion
+
+
 };

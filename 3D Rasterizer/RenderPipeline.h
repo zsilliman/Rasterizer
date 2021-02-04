@@ -50,17 +50,17 @@ public:
 
 protected:
 
-	void TransformVertices(RenderableTriangle& tri, Material& material, ObjectMatrices& matrices);
+	void TransformVertices(RenderableTriangle& tri, std::shared_ptr<Material> material, ObjectMatrices& matrices);
 
-	void EnumeratePixels(RenderableTriangle& tri, Material& material);
+	void EnumeratePixels(RenderableTriangle& tri, std::shared_ptr<Material> material);
 
-	void DrawScanline(const RenderableTriangle& tri, Material& material, int startX, int endX, int y, const IncrementalValues& iv, float depthDx);
+	void DrawScanline(const RenderableTriangle& tri, std::shared_ptr<Material> material, int startX, int endX, int y, const IncrementalValues& iv, float depthDx);
 
-	void FillTriangle(const RenderableTriangle& tri, Material& material);
+	void FillTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material);
 
-	void FillBottomFlatTriangle(const RenderableTriangle& tri, Material& material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv);
+	void FillBottomFlatTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv);
 
-	void FillTopFlatTriangle(const RenderableTriangle& tri, Material& material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv);
+	void FillTopFlatTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv);
 
 	void MergePixel(SDL_Color color, int pixel_index, float depth);
 

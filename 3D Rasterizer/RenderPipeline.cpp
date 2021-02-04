@@ -89,14 +89,35 @@ void SortVertices(RenderableTriangle& triangle) {
 	}
 }
 
-void RenderPipeline::EnumeratePixels(RenderableTriangle& tri, Material& material)
+void RenderPipeline::EnumeratePixels(RenderableTriangle& tri, std::shared_ptr<Material> material)
 {
 	SortVertices(tri);
 	FillTriangle(tri, material);
 }
 
+Vector3d ComputeBarycentricCoords(Vector2d P, Vector2d A, Vector2d B, Vector2d C) {
+	Vector2d v0 = B - A, v1 = C - A, v2 = P - A;
+	float den = v0.x() * v1.y() - v1.x() * v0.y();
+	double v = (v2.x() * v1.y() - v1.x() * v2.y()) / den;
+	double w = (v0.x() * v2.y() - v2.x() * v0.y()) / den;
+	double u = 1.0f - v - w;
+	Vector3d baryCoords;
+	baryCoords << u, v, w;
+	return baryCoords;
+}
+
+void InterpolateValues(const RenderableTriangle& tri, const Vector3d& barycentricCoords, InterpolatedValues& v) {
+	v.barycentricCoord << barycentricCoords.x() / tri.Vertices[0].w, barycentricCoords.y() / tri.Vertices[1].w, barycentricCoords.z() / tri.Vertices[2].w;
+	v.barycentricCoord /= barycentricCoords.x() / tri.Vertices[0].w + barycentricCoords.y() / tri.Vertices[1].w + barycentricCoords.z() / tri.Vertices[2].w;
+	//v.barycentricCoord << barycentricCoords;
+	
+	v.interpolatedValues.UV = tri.Vertices[0].UV * v.barycentricCoord.x() + tri.Vertices[1].UV * v.barycentricCoord.y() + tri.Vertices[2].UV * v.barycentricCoord.z();
+	v.interpolatedValues.vertexNormal = tri.Vertices[0].vertexNormal * v.barycentricCoord.x() + tri.Vertices[1].vertexNormal * v.barycentricCoord.y() + tri.Vertices[2].vertexNormal * v.barycentricCoord.z();
+	v.interpolatedValues.vertexPosition = tri.Vertices[0].vertexPosition * v.barycentricCoord.x() + tri.Vertices[1].vertexPosition * v.barycentricCoord.y() + tri.Vertices[2].vertexPosition * v.barycentricCoord.z();
+}
+
 //Iterates from startX to endX. Could traverse in either direction.
-void RenderPipeline::DrawScanline(const RenderableTriangle& tri, Material& material, int startX, int endX, int y, const IncrementalValues& iv, float depthDx)
+void RenderPipeline::DrawScanline(const RenderableTriangle& tri, std::shared_ptr<Material> material, int startX, int endX, int y, const IncrementalValues& iv, float depthDx)
 {
 	//Checks if it is on screen
 	if (y >= sceneTexture->height || y < 0 || (startX < 0 && endX < 0) || (startX >= sceneTexture->width && endX >= sceneTexture->width))
@@ -115,19 +136,22 @@ void RenderPipeline::DrawScanline(const RenderableTriangle& tri, Material& mater
 		Vector2d P;
 		P << x, y;
 
-		//INTERPOLATE VALUES
-		//Vector3d baryCoords = ComputeBarycentricCoords(P, tri.Vertices[0].screenPosition.head<2>(), tri.Vertices[1].screenPosition.head<2>(), tri.Vertices[2].screenPosition.head<2>());
-		InterpolatedValues v;
-		v.interpolatedValues.color = tri.Vertices[0].color;
-		v.interpolatedValues.vertexNormal = tri.Vertices[0].vertexNormal;
-		//v.interpolatedValues.screenPosition << x, y, 0;
-		//InterpolateValues(tri, baryCoords, v);
+		
 
 		//Handle Z-Buffer
 		float buff_value = sceneTexture->z_buffer[offset + x];
 		if (depth < buff_value && depth >= -1 && depth <= 1) {
+
+			//INTERPOLATE VALUES
+			Vector3d baryCoords = ComputeBarycentricCoords(P, tri.Vertices[0].screenPosition.head<2>(), tri.Vertices[1].screenPosition.head<2>(), tri.Vertices[2].screenPosition.head<2>());
+			InterpolatedValues v;
+			//v.interpolatedValues.color = tri.Vertices[0].color;
+			//v.interpolatedValues.vertexNormal = tri.Vertices[0].vertexNormal;
+			v.interpolatedValues.screenPosition << x, y, 0;
+			InterpolateValues(tri, baryCoords, v);
+
 			//Call Fragment shader
-			SDL_Color col = material.frag(v);
+			SDL_Color col = material->frag(v);
 			//MergePixel(col, offset + x, depth);
 			int index = offset + x;
 			//Uint32 color = ColorToUint(col.r, col.g, col.b);
@@ -138,7 +162,7 @@ void RenderPipeline::DrawScanline(const RenderableTriangle& tri, Material& mater
 }
 
 //A.y() >= B.y() == C.y() 
-void RenderPipeline::FillBottomFlatTriangle(const RenderableTriangle& tri, Material& material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv)
+void RenderPipeline::FillBottomFlatTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv)
 {
 	double invslope_left;
 	double invslope_right;
@@ -206,7 +230,7 @@ void RenderPipeline::FillBottomFlatTriangle(const RenderableTriangle& tri, Mater
 }
 
 //A.y() == B.y() >= C.y() 
-void RenderPipeline::FillTopFlatTriangle(const RenderableTriangle& tri, Material& material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv)
+void RenderPipeline::FillTopFlatTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material, const Vector3d& A, const Vector3d& B, const Vector3d& C, IncrementalValues& iv)
 {
 	double invslope_left;
 	double invslope_right;
@@ -273,7 +297,7 @@ void RenderPipeline::FillTopFlatTriangle(const RenderableTriangle& tri, Material
 
 //Assumes the vertices are in the proper order before calling. Call "Sort Vertices" first.
 //Vertices must be sorted in descending order by the y coordinate in screen space.
-void RenderPipeline::FillTriangle(const RenderableTriangle& tri, Material& material)
+void RenderPipeline::FillTriangle(const RenderableTriangle& tri, std::shared_ptr<Material> material)
 {
 	Vector3d A, B, C, D;
 	A << tri.Vertices[0].screenPosition.head<3>();
@@ -306,13 +330,13 @@ void RenderPipeline::FillTriangle(const RenderableTriangle& tri, Material& mater
 
 #pragma region Triangles and Vertices
 
-void RenderPipeline::TransformVertices(RenderableTriangle& tri, Material& material, ObjectMatrices& matrices)
+void RenderPipeline::TransformVertices(RenderableTriangle& tri, std::shared_ptr<Material> material, ObjectMatrices& matrices)
 {
 	//Iterate over vertices
 	for (int i = 0; i < 3; i++) {
 		//Call Vertex Shader. Assume positions are in world space after shader call.
 		RenderableVertex vertex = tri.Vertices[i];
-		material.vert(vertex, matrices);
+		material->vert(vertex, matrices);
 		tri.Vertices[i] = vertex;
 
 		//Compute screenspace coordinates
@@ -320,6 +344,7 @@ void RenderPipeline::TransformVertices(RenderableTriangle& tri, Material& materi
 		tri.Vertices[i].vertexNormal = matrices.WorldToCameraMatrix * tri.Vertices[i].vertexNormal;
 		tri.Vertices[i].vertexPosition << v_cam;
 		Eigen::Vector4d ndc = matrices.CameraProjectionMatrix * v_cam;
+		tri.Vertices[i].w = ndc.w();
 		ndc /= ndc.w();
 		tri.Vertices->NDCVertex << ndc;
 		Eigen::Vector4d v_screen = matrices.CameraToScreenMatrix * ndc;
@@ -383,7 +408,7 @@ void RenderPipeline::RenderMeshObject(shared_ptr<Camera> camera, MeshObject& sce
 				tri.Vertices[k].color = t.Color;
 			}
 
-			Material material = scene_obj.materials[t.material_id];
+			std::shared_ptr<Material> material = scene_obj.materials[t.material_id];
 			//Execute vertex shader. Assume coordinates are in world space after execution.
 			TransformVertices(tri, material, matrices);
 

@@ -9,6 +9,8 @@ namespace ZSMath {
 
 	int clampInt(int t, int a, int b);
 
+	int NonNegativeModulo(int a, int n);
+
 	Eigen::Vector2d lerp(const Eigen::Vector2d& A, const Eigen::Vector2d& B, double t);
 
 	Eigen::Vector3d lerp(const Eigen::Vector3d& A, const Eigen::Vector3d& B, double t);
